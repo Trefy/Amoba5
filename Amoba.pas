@@ -91,15 +91,23 @@ var i, j: Byte;
 begin
   for i := 0 to sizeX do
     for j := 0 to sizeY do
-      Case PlayGround[i, j] of
-        0 : TableButton[i, j].Caption := '';
-        1 : TableButton[i, j].Caption := 'X';
-        2 : TableButton[i, j].Caption := 'O';
+      begin
+        case PlayGround[i, j] of
+          0 : TableButton[i, j].Caption := '';
+          1 : TableButton[i, j].Caption := 'X';
+          2 : TableButton[i, j].Caption := 'O';
+        end;
+        TableButton[i, j].Font.Style := [];
       end;
 end;
 
 procedure TMainForm.Winner(Player: Byte);
+var i: Byte;
 begin
+  for i := 0 to 4 do
+    TableButton[WinnerI[i], WinnerJ[i]].Font.Style := [fsBold];
+    //TableButton[WinnerI[i], WinnerJ[i]].Caption := '$';
+
   Application.MessageBox('We have a winner!', 'Message', 0);
   InitPlayGround();
   RefreshPlayGround();

@@ -13,6 +13,8 @@ const
     function CheckGameEnd(lastI: Byte; lastJ: Byte; Player: Byte) : boolean;
 var
     PlayGround: array [0..sizeX, 0..sizeY] of Byte;
+    WinnerI: array [0..4] of Byte;
+    WinnerJ: array [0..4] of Byte;
 
 implementation
 
@@ -52,7 +54,12 @@ begin
   k := 0;
   for j := y to m do
   begin
-    if PlayGround[lastI, j] = Player then k := k + 1
+    if PlayGround[lastI, j] = Player then
+      begin
+        WinnerI[k] := lastI;
+        WinnerJ[k] := j;
+        k := k + 1;
+      end
     else k := 0;
     if k >= 5 then
     begin
@@ -77,7 +84,12 @@ begin
   k := 0;
   for i := x to n do
   begin
-    if PlayGround[i, lastJ] = Player then k := k + 1
+    if PlayGround[i, lastJ] = Player then
+      begin
+        WinnerI[k] := i;
+        WinnerJ[k] := lastJ;
+        k := k + 1;
+      end
     else k := 0;
     if k >= 5 then
     begin
@@ -117,7 +129,12 @@ begin
   k := 0;
   for i := x to n do
   begin
-    if PlayGround[i, j] = Player then k := k + 1
+    if PlayGround[i, j] = Player then
+      begin
+        WinnerI[k] := i;
+        WinnerJ[k] := j;
+        k := k + 1;
+      end
     else k := 0;
     if k >= 5 then
     begin
@@ -159,7 +176,12 @@ begin
   k := 0;
   for i := x to n do
   begin
-    if PlayGround[i, j] = Player then k := k + 1
+    if PlayGround[i, j] = Player then
+      begin
+        WinnerI[k] := i;
+        WinnerJ[k] := j;
+        k := k + 1;
+      end
     else k := 0;
     if k >= 5 then
     begin
