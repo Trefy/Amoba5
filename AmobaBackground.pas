@@ -1,6 +1,11 @@
 unit AmobaBackground;
 
 interface
+
+uses
+  //DateUtils;
+  SysUtils;
+
 const
     sizeX = 11;
     sizeY = 11;
@@ -11,16 +16,21 @@ const
     function VerticalDownTest(lastI: Byte; lastJ: Byte; Player: Byte) : boolean;
     function VerticalUpTest(lastI: Byte; lastJ: Byte; Player: Byte) : boolean;
     function CheckGameEnd(lastI: Byte; lastJ: Byte; Player: Byte) : boolean;
+    function SaveStepsToFile() : boolean;
 var
     PlayGround: array [0..sizeX, 0..sizeY] of Byte;
     WinnerI: array [0..4] of Byte;
     WinnerJ: array [0..4] of Byte;
+    StepsI: array [0..sizeX * sizeY] of Byte;
+    StepsJ: array [0..sizeX * sizeY] of Byte;
+    StepsCount: integer;
 
 implementation
 
 procedure InitPlayGround();
 var i, j: Byte;
 begin
+  StepsCount := 0;
   for i := 0 to sizeX do
     for j := 0 to sizeY do
       PlayGround[i,j] := 0;
@@ -29,6 +39,9 @@ end;
 function CheckGameEnd(lastI: Byte; lastJ: Byte; Player: Byte) : boolean;
 begin
   PlayGround[lastI, lastJ] := Player;
+  StepsI[StepsCount] := lastI;
+  StepsJ[StepsCount] := lastJ;
+  StepsCount := StepsCount + 1;
   Result := false;
   if VerticalTest(lastI, lastJ, Player) then Result := true
   else
@@ -37,6 +50,8 @@ begin
         if VerticalDownTest(lastI, lastJ, Player) then Result := true
           else
             if VerticalUpTest(lastI, lastJ, Player) then Result:= true;
+
+  if Result = true then SaveStepsToFile();
 end;
 
 function HorizontalTest(lastI: Byte; lastJ: Byte; Player: Byte) : boolean;
@@ -192,6 +207,28 @@ begin
        if (j <= 0) then break;
     j := j - 1;
   end;
+end;
+
+function SaveStepsToFile() : boolean;
+var
+  Step, FileName : String;
+  FileDateTime : TDateTime;
+  GameFile : TextFile;
+  i : integer;
+begin
+  FileDateTime := Now;
+  FileName := DateToStr(FileDateTime) + 'T' + TimeToStr(FileDateTime);
+  FileName := StringReplace(FileName, '/', '_', [rfReplaceAll, rfIgnoreCase]);
+  FileName := StringReplace(FileName, ':', '_', [rfReplaceAll, rfIgnoreCase]);
+  FileName := 'Game_' + FileName;
+  AssignFile(GameFile, FileName);
+  ReWrite(GameFile);
+  for i := 0 to StepsCount - 1 do
+  begin
+    Step := '{' + IntToStr(StepsI[i]) + ', ' + IntToStr(StepsJ[i]) + '}';
+    WriteLn(GameFile, Step);
+  end;
+  CloseFile(GameFile);
 end;
 
 end.
