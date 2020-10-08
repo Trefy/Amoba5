@@ -220,7 +220,7 @@ begin
   FileName := DateToStr(FileDateTime) + 'T' + TimeToStr(FileDateTime);
   FileName := StringReplace(FileName, '/', '_', [rfReplaceAll, rfIgnoreCase]);
   FileName := StringReplace(FileName, ':', '_', [rfReplaceAll, rfIgnoreCase]);
-  FileName := 'Game_' + FileName;
+  FileName := 'Game_' + FileName + '.txt';
   AssignFile(GameFile, FileName);
   ReWrite(GameFile);
   for i := 0 to StepsCount - 1 do
